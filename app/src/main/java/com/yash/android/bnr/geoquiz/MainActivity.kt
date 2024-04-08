@@ -6,10 +6,10 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
+import com.yash.android.bnr.geoquiz.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var trueButton: Button
-    private lateinit var falseButton: Button
+    private lateinit var binding: ActivityMainBinding
 
     private val questionBank = listOf(
         Question(R.string.question_australia, true),
@@ -22,14 +22,15 @@ class MainActivity : AppCompatActivity() {
     private var currentIndex = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        trueButton = findViewById(R.id.true_button)
-        falseButton = findViewById(R.id.false_button)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        trueButton.setOnClickListener { view: View ->
+        val questionResId = questionBank[currentIndex].textResId
+        binding.questionTextView.setText(questionResId)
+        binding.trueButton.setOnClickListener { view: View ->
             Snackbar.make(view, R.string.correct_toast, Snackbar.LENGTH_SHORT).show()
         }
-        falseButton.setOnClickListener { view: View ->
+        binding.falseButton.setOnClickListener { view: View ->
             Snackbar.make(view, R.string.incorrect_toast, Snackbar.LENGTH_SHORT).show()
         }
     }

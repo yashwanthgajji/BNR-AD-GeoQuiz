@@ -36,6 +36,10 @@ class MainActivity : AppCompatActivity() {
             currentIndex = (currentIndex + 1) % questionBank.size
             showCurrentQuestion(currentIndex)
         }
+        binding.questionTextView.setOnClickListener {
+            currentIndex = (currentIndex + 1) % questionBank.size
+            showCurrentQuestion(currentIndex)
+        }
     }
 
     private fun showCurrentQuestion(currentId: Int) {

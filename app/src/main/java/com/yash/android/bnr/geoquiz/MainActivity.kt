@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        showCurrentQuestion(currentIndex)
+        showCurrentQuestion()
         binding.trueButton.setOnClickListener {
             checkAnswerAndShowToast(true)
         }
@@ -34,11 +34,19 @@ class MainActivity : AppCompatActivity() {
         }
         binding.nextButton.setOnClickListener {
             currentIndex = (currentIndex + 1) % questionBank.size
-            showCurrentQuestion(currentIndex)
+            showCurrentQuestion()
+        }
+        binding.prevButton.setOnClickListener {
+            currentIndex = (currentIndex - 1 + questionBank.size) % questionBank.size
+            showCurrentQuestion()
+        }
+        binding.questionTextView.setOnClickListener {
+            currentIndex = (currentIndex + 1) % questionBank.size
+            showCurrentQuestion()
         }
     }
 
-    private fun showCurrentQuestion(currentId: Int) {
+    private fun showCurrentQuestion() {
         val questionResId = questionBank[currentIndex].textResId
         binding.questionTextView.setText(questionResId)
     }

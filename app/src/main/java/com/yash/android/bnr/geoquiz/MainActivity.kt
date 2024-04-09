@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_asia, true)
     )
     private var currentIndex = 0
+    private var answeredQuestions = mutableSetOf<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate() called")
@@ -52,6 +53,13 @@ class MainActivity : AppCompatActivity() {
     private fun showCurrentQuestion() {
         val questionResId = questionBank[currentIndex].textResId
         binding.questionTextView.setText(questionResId)
+        if (!answeredQuestions.contains(currentIndex)) {
+            binding.trueButton.isEnabled = true
+            binding.falseButton.isEnabled = true
+        } else {
+            binding.trueButton.isEnabled = false
+            binding.falseButton.isEnabled = false
+        }
     }
 
     private fun checkAnswerAndShowToast(userAnswer: Boolean) {
@@ -61,7 +69,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             R.string.incorrect_toast
         }
-
+        answeredQuestions.add(currentIndex)
+        binding.trueButton.isEnabled = false
+        binding.falseButton.isEnabled = false
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
     }
 

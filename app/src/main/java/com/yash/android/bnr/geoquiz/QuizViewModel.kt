@@ -24,15 +24,11 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     private var currentIndex: Int
         get() = savedStateHandle[CURRENT_INDEX_KEY] ?: 0
         set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
-    private var answeredQuestions = mutableSetOf<Int>()
-    private var correctAnswers = 0
 
     val currentQuestionAnswer: Boolean
         get() = questionBank[currentIndex].answer
     val currentQuestionText: Int
         get() = questionBank[currentIndex].textResId
-    val isCurrentQuestionAnswered: Boolean
-        get() = answeredQuestions.contains(currentIndex)
 
     fun moveToNext() {
         currentIndex = (currentIndex + 1) % questionBank.size
@@ -40,27 +36,6 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
 
     fun moveToPrev() {
         currentIndex = (currentIndex - 1 + questionBank.size) % questionBank.size
-    }
-
-    fun addCurrentQuestionAsAnswered() {
-        answeredQuestions.add(currentIndex)
-    }
-
-    fun incrementCorrectAnswer() {
-        correctAnswers++
-    }
-
-    fun areAllQuestionsAnswered(): Boolean {
-        return answeredQuestions.size == questionBank.size
-    }
-
-    fun getPercentage(): Int {
-        return (correctAnswers * 100) / questionBank.size
-    }
-
-    fun clearAnswers() {
-        correctAnswers = 0
-        answeredQuestions.clear()
     }
 
     override fun onCleared() {

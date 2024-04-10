@@ -43,31 +43,16 @@ class MainActivity : AppCompatActivity() {
     private fun showCurrentQuestion() {
         val questionResId = quizViewModel.currentQuestionText
         binding.questionTextView.setText(questionResId)
-        if (quizViewModel.isCurrentQuestionAnswered) {
-            binding.trueButton.isEnabled = false
-            binding.falseButton.isEnabled = false
-        } else {
-            binding.trueButton.isEnabled = true
-            binding.falseButton.isEnabled = true
-        }
     }
 
     private fun checkAnswerAndShowToast(userAnswer: Boolean) {
         val correctAnswer = quizViewModel.currentQuestionAnswer
         val messageResId = if (userAnswer == correctAnswer) {
-            quizViewModel.incrementCorrectAnswer()
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
         }
-        quizViewModel.addCurrentQuestionAsAnswered()
-        binding.trueButton.isEnabled = false
-        binding.falseButton.isEnabled = false
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
-        if (quizViewModel.areAllQuestionsAnswered()) {
-            Toast.makeText(this, "Your percentage is $quizViewModel.getPercentage()", Toast.LENGTH_SHORT).show()
-            quizViewModel.clearAnswers()
-        }
     }
 
     override fun onStart() {

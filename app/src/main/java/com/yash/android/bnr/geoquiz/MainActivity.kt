@@ -12,17 +12,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val quizViewModel: QuizViewModel by viewModels()
 
-    private val questionBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true)
-    )
-    private var currentIndex = 0
-    private var answeredQuestions = mutableSetOf<Int>()
-    private var correctAnswers = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate() called")
@@ -38,48 +27,46 @@ class MainActivity : AppCompatActivity() {
             checkAnswerAndShowToast(false)
         }
         binding.nextButton.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             showCurrentQuestion()
         }
         binding.prevButton.setOnClickListener {
-            currentIndex = (currentIndex - 1 + questionBank.size) % questionBank.size
+            quizViewModel.moveToPrev()
             showCurrentQuestion()
         }
         binding.questionTextView.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             showCurrentQuestion()
         }
     }
 
     private fun showCurrentQuestion() {
-        val questionResId = questionBank[currentIndex].textResId
+        val questionResId = quizViewModel.currentQuestionText
         binding.questionTextView.setText(questionResId)
-        if (!answeredQuestions.contains(currentIndex)) {
-            binding.trueButton.isEnabled = true
-            binding.falseButton.isEnabled = true
-        } else {
+        if (quizViewModel.isCurrentQuestionAnswered) {
             binding.trueButton.isEnabled = false
             binding.falseButton.isEnabled = false
+        } else {
+            binding.trueButton.isEnabled = true
+            binding.falseButton.isEnabled = true
         }
     }
 
     private fun checkAnswerAndShowToast(userAnswer: Boolean) {
-        val correctAnswer = questionBank[currentIndex].answer
+        val correctAnswer = quizViewModel.currentQuestionAnswer
         val messageResId = if (userAnswer == correctAnswer) {
-            correctAnswers++
+            quizViewModel.incrementCorrectAnswer()
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
         }
-        answeredQuestions.add(currentIndex)
+        quizViewModel.addCurrentQuestionAsAnswered()
         binding.trueButton.isEnabled = false
         binding.falseButton.isEnabled = false
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
-        if (answeredQuestions.size == questionBank.size) {
-            val percentage = (correctAnswers * 100) / questionBank.size
-            Toast.makeText(this, "Your percentage is $percentage", Toast.LENGTH_SHORT).show()
-            correctAnswers = 0
-            answeredQuestions.clear()
+        if (quizViewModel.areAllQuestionsAnswered()) {
+            Toast.makeText(this, "Your percentage is $quizViewModel.getPercentage()", Toast.LENGTH_SHORT).show()
+            quizViewModel.clearAnswers()
         }
     }
 

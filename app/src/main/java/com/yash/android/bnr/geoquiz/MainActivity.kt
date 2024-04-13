@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             showCurrentQuestion()
         }
         binding.cheatButton.setOnClickListener {
-            startActivity(Intent(this, CheatActivity::class.java))
+            startActivity(CheatActivity.newIntent(this, quizViewModel.currentQuestionAnswer))
         }
     }
 

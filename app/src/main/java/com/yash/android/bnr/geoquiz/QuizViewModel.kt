@@ -5,13 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
 private const val TAG = "QuizViewModel"
-private const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
-private const val ANSWERED_QUESTIONS_KEY = "ANSWERED_QUESTIONS_KEY"
-private const val CORRECT_ANSWERS_KEY = "CORRECT_ANSWERS_KEY"
+const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
 class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    init {
-        Log.d(TAG, "ViewModel instance created")
-    }
 
     private val questionBank = listOf(
         Question(R.string.question_australia, true),

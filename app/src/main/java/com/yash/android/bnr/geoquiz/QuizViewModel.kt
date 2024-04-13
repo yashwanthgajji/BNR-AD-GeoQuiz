@@ -5,8 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
 private const val TAG = "QuizViewModel"
-const val IS_CHEATER_KEY = "IS_CHEATER_KEY"
 const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
+const val CURR_QUESTION_CHEAT_KEY = "CURR_QUESTION_CHEAT_KEY"
 class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val questionBank = listOf(
@@ -20,9 +20,9 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     private var currentIndex: Int
         get() = savedStateHandle[CURRENT_INDEX_KEY] ?: 0
         set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
-    var isCheater: Boolean
-        get() = savedStateHandle.get(IS_CHEATER_KEY) ?: false
-        set(value) = savedStateHandle.set(IS_CHEATER_KEY, value)
+    private var questionsCheated: BooleanArray
+        get() = savedStateHandle[CURR_QUESTION_CHEAT_KEY] ?: BooleanArray(questionBank.size)
+        set(value) = savedStateHandle.set(CURR_QUESTION_CHEAT_KEY, value)
 
     val currentQuestionAnswer: Boolean
         get() = questionBank[currentIndex].answer
@@ -35,6 +35,16 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
 
     fun moveToPrev() {
         currentIndex = (currentIndex - 1 + questionBank.size) % questionBank.size
+    }
+
+    fun isCurrentQuestionCheated() : Boolean {
+        return questionsCheated[currentIndex]
+    }
+
+    fun setCurrentQuestionCheated() {
+        val tempArray = questionsCheated
+        tempArray[currentIndex] = true
+        questionsCheated = tempArray
     }
 
     override fun onCleared() {

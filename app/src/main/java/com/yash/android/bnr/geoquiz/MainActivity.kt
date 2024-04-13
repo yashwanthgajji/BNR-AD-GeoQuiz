@@ -1,5 +1,6 @@
 package com.yash.android.bnr.geoquiz
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -37,6 +38,9 @@ class MainActivity : AppCompatActivity() {
         binding.questionTextView.setOnClickListener {
             quizViewModel.moveToNext()
             showCurrentQuestion()
+        }
+        binding.cheatButton.setOnClickListener {
+            startActivity(Intent(this, CheatActivity::class.java))
         }
     }
 

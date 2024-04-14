@@ -3,6 +3,7 @@ package com.yash.android.bnr.geoquiz
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,8 @@ class CheatActivity : AppCompatActivity() {
             cheatViewModel.isAnswerShown = true
             setAnswerShownResult()
         }
+        val apiLevel = "API-Level: ${Build.VERSION.SDK_INT}"
+        binding.apiLevelText.text = apiLevel
     }
 
     private fun showAnswer() {

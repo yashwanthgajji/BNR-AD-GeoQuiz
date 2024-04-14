@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 private const val TAG = "QuizViewModel"
 const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
 const val CURR_QUESTION_CHEAT_KEY = "CURR_QUESTION_CHEAT_KEY"
+const val NUM_CHEATED_KEY = "NUM_CHEATED_KEY"
 class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val questionBank = listOf(
@@ -29,6 +30,13 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     val currentQuestionText: Int
         get() = questionBank[currentIndex].textResId
 
+    private val MAX_CHEATS = 3
+    private var numTimesCheated: Int
+        get() = savedStateHandle[NUM_CHEATED_KEY] ?: 0
+        set(value) = savedStateHandle.set(NUM_CHEATED_KEY, value)
+
+    fun cheatsRemaining() = MAX_CHEATS - numTimesCheated
+
     fun moveToNext() {
         currentIndex = (currentIndex + 1) % questionBank.size
     }
@@ -45,6 +53,7 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         val tempArray = questionsCheated
         tempArray[currentIndex] = true
         questionsCheated = tempArray
+        numTimesCheated++
     }
 
     override fun onCleared() {

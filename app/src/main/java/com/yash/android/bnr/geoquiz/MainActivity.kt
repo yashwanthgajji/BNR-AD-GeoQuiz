@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
             val isCheated = result.data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
             if (isCheated) {
                 quizViewModel.setCurrentQuestionCheated()
+                showCheatsRemaining()
             }
         }
     }
@@ -57,8 +58,17 @@ class MainActivity : AppCompatActivity() {
         binding.cheatButton.setOnClickListener {
             cheatLauncher.launch(CheatActivity.newIntent(this, quizViewModel.currentQuestionAnswer))
         }
+        showCheatsRemaining()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             blurCheatButton()
+        }
+    }
+
+    private fun showCheatsRemaining() {
+        val cheatsRemain = "Cheats remaining: ${quizViewModel.cheatsRemaining()}"
+        binding.cheatRemainingTextView.text = cheatsRemain
+        if (quizViewModel.cheatsRemaining() == 0) {
+            binding.cheatButton.isEnabled = false
         }
     }
 
